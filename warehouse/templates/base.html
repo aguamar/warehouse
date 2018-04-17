@@ -87,7 +87,9 @@
     </script>
     {% block extra_js %}
     {% endblock %}
-    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    {% if request.registry.settings.get("ga.tracking_id") -%}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ request.registry.settings['ga.tracking_id'] }}"></script>
+    {% endif -%}
   </head>
 
   <body data-controller="viewport-toggle">
@@ -100,8 +102,7 @@
       Switch to mobile version
     </button>
 
-    <section class="stick-to-top js-stick-to-top">
-
+    <section id="sticky-notifications" class="stick-to-top js-stick-to-top">
       {% include "warehouse:templates/includes/warning-banner.html" %}
       <!-- Add browser warning. Will show for ie9 and below -->
       <!--[if IE]>
@@ -134,6 +135,8 @@
       <span class="notification-bar__message">{{ flag.description }}</span>
     </div>
     {% endfor %}
+
+    {% block session_notifications %}{% endblock %}
 
     <div class="notification-bar">
       <span class="notification-bar__message">Help us improve Python packaging – <a href="https://donate.pypi.org">donate today!</a></span>
@@ -224,7 +227,6 @@
             <h3>Contributing to PyPI</h3>
           </li>
           <li><a href="{{ request.route_path('help')}}#feedback">Bugs &amp; feedback</a></li>
-          <li><a href="https://wiki.python.org/psf/WarehouseRoadmap">Development roadmap</a></li>
           <li><a href="https://github.com/pypa/warehouse">Contribute on GitHub</a></li>
           <li><a href="https://github.com/pypa/warehouse/graphs/contributors">Development credits</a></li>
         </ul>
